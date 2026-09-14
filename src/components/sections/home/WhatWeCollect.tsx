@@ -56,14 +56,14 @@ const workflowSteps: WorkflowStep[] = [
     metric: "Zero Chemical Effluents",
   },
   {
-    id: "organic",
+    id: "granulation",
     code: "04",
-    title: "Organic Biogas",
-    category: "Anaerobic Digestion",
-    icon: Flame,
-    summary: "Biodegradable organic waste diverted away from rotting in open pits directly into closed community digestion cells.",
-    items: ["Municipal Wet Refuse", "Food Processing Residue", "Horticulture Scrap", "Agri-Biomass"],
-    metric: "Renewable Methane Fuel",
+    title: "Granulation & Extrusion",
+    category: "Mechanical Compounding",
+    icon: Factory, // or Cog / Layers from lucide-react
+    summary: "Melting, degassing, and pelletizing shredded polymers into uniform post-consumer resin (PCR) granules and structural core sheets.",
+    items: ["High-Density Pellets", "Core Polymer Sheets", "CPCB Category-II Flakes", "Uniform Extrusions"],
+    metric: "Audit-Ready PCR Material",
   },
   {
     id: "upcycle",
