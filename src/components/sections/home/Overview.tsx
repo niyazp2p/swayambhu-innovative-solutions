@@ -1,12 +1,34 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useInView, type Variants } from "framer-motion";
+import { Play, Pause, Volume2, VolumeX, ShieldCheck } from "lucide-react";
 
 export default function Overview() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-10% 0px" });
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  };
 
   const easeExpo = [0.16, 1, 0.3, 1] as const;
 
@@ -43,7 +65,7 @@ export default function Overview() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative w-full bg-[#ECE8E1] text-[#0D1812] pt-12 sm:pt-16 pb-16 sm:pb-24 px-6 sm:px-10 lg:px-16 overflow-hidden selection:bg-[#063D2A] selection:text-[#ECE8E1]"
+      className="relative w-full bg-[#ECE8E1] text-[#0D1812] pt-12 sm:pt-16 pb-16 sm:pb-24 px-4 sm:px-10 lg:px-16 overflow-hidden selection:bg-[#063D2A] selection:text-[#ECE8E1]"
     >
       <div className="max-w-7xl mx-auto">
         {/* Compact Hairline Section Header */}
@@ -70,13 +92,13 @@ export default function Overview() {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start mb-12 sm:mb-16"
         >
           {/* Left Column: Monumental Editorial Statement */}
           <div className="lg:col-span-7 space-y-6">
             <motion.h2
               variants={itemVariants}
-              className="font-sans font-light text-[2.4rem] xs:text-[2.9rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] leading-[0.92] tracking-[-0.035em] uppercase text-[#0B1710]"
+              className="font-sans font-light text-[2.2rem] xs:text-[2.7rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] leading-[0.94] tracking-[-0.035em] uppercase text-[#0B1710]"
             >
               The world <br />
               doesn&apos;t have <br />
@@ -158,6 +180,109 @@ export default function Overview() {
                 ))}
               </div>
             </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Corporate Documentary Video Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.85, delay: 0.25, ease: easeExpo }}
+          className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[#063D2A]/15 bg-[#0A0F0D] shadow-[0_16px_50px_rgba(6,61,42,0.12)]"
+        >
+          {/* Top Video HUD Ribbon */}
+          <div className="px-4 sm:px-6 py-3 border-b border-white/10 bg-[#0A0F0D]/90 backdrop-blur-md flex items-center justify-between z-20 relative">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse" />
+              <span className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-white/90 font-medium">
+                Corporate Documentary
+              </span>
+            </div>
+
+            <div className="hidden sm:flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-white/50">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#22C55E]" />
+              <span>CPCB Registered Facility</span>
+            </div>
+          </div>
+
+          {/* Video Player Frame with Centered Overlay */}
+          <div
+            onClick={togglePlay}
+            className="relative w-full aspect-video max-h-[640px] bg-black cursor-pointer group overflow-hidden"
+          >
+            <video
+              ref={videoRef}
+              src="https://res.cloudinary.com/xsvovuyk/video/upload/v1789361975/IMG_4657.mp4"
+              playsInline
+              preload="metadata"
+              muted={isMuted}
+              onEnded={() => setIsPlaying(false)}
+              className="w-full h-full object-cover"
+            />
+
+            {/* Video Darkening Overlay when paused */}
+            <div
+              className={`absolute inset-0 bg-black/40 transition-opacity duration-300 pointer-events-none ${
+                isPlaying ? "opacity-0 group-hover:opacity-30" : "opacity-100"
+              }`}
+            />
+
+            {/* Exact Center Play/Pause Button Overlay */}
+            <div
+              className={`absolute inset-0 z-10 flex items-center justify-center pointer-events-none transition-all duration-300 ${
+                isPlaying ? "scale-90 opacity-0 group-hover:opacity-100" : "scale-100 opacity-100"
+              }`}
+            >
+              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-[#006B3C]/90 hover:bg-[#006B3C] border-2 border-[#FDF8EE]/80 text-[#FDF8EE] flex items-center justify-center shadow-[0_0_30px_rgba(0,107,60,0.5)] transition-transform group-hover:scale-105">
+                {isPlaying ? (
+                  <Pause className="w-6 h-6 sm:w-8 sm:h-8" />
+                ) : (
+                  <Play className="w-6 h-6 sm:w-8 sm:h-8 translate-x-0.5" />
+                )}
+              </div>
+            </div>
+
+            {/* Bottom Floating Controls Bar */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 z-20 flex items-center justify-between bg-[#0A0F0D]/80 backdrop-blur-md px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl border border-white/10"
+            >
+              <div className="flex items-center gap-2 text-white">
+                <button
+                  type="button"
+                  onClick={togglePlay}
+                  className="p-1 hover:text-[#22C55E] transition-colors cursor-pointer"
+                  aria-label={isPlaying ? "Pause video" : "Play video"}
+                >
+                  {isPlaying ? (
+                    <Pause className="w-4 h-4" />
+                  ) : (
+                    <Play className="w-4 h-4" />
+                  )}
+                </button>
+                <span className="text-[10px] sm:text-xs font-mono tracking-wider uppercase text-white/70">
+                  {isPlaying ? "Playing Video" : "Click to Play"}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={toggleMute}
+                  className="p-1 text-white hover:text-[#22C55E] transition-colors cursor-pointer"
+                  aria-label={isMuted ? "Unmute video" : "Mute video"}
+                >
+                  {isMuted ? (
+                    <VolumeX className="w-4 h-4 text-white/70" />
+                  ) : (
+                    <Volume2 className="w-4 h-4 text-[#22C55E]" />
+                  )}
+                </button>
+                <span className="text-[9px] sm:text-[10px] font-mono text-white/40 uppercase tracking-widest hidden xs:inline">
+                  1080P HD
+                </span>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
