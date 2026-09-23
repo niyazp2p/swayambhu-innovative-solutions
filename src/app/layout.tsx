@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
 import PublicChrome from "@/components/layout/PublicChrome";
-
+import { AuthProvider } from "@/context/AuthContext";
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
@@ -178,7 +178,11 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans bg-swayam-ivory text-swayam-dark antialiased selection:bg-swayam-forest selection:text-white">
-        <PublicChrome>{children}</PublicChrome>
+        <AuthProvider>
+        <PublicChrome>
+          {children}
+          </PublicChrome>
+          </AuthProvider>
       </body>
     </html>
   );

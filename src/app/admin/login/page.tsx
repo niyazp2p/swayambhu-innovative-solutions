@@ -15,12 +15,12 @@ import {
   ShieldCheck,
   CheckCircle2,
 } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { apiClient } from "@/lib/api-client";
 
 const easeCurve = [0.16, 1, 0.3, 1] as const;
 
-export default function AdminLoginPage() {
+function LoginFormInner() {
   const router = useRouter();
   const { login } = useAuth();
 
@@ -154,7 +154,7 @@ export default function AdminLoginPage() {
                 </span>
               </h1>
               <p className="text-xs text-[#9BB1A3] font-light leading-relaxed max-w-sm pt-1">
-                Centralized weighbridge capture, daily DPR reconciliation, and statutory CPCB Cat-II audit verification.
+                Centralized weighbridge capture, daily DPR reconciliation, and statutory CPCB Cat-II audit verification[cite: 1].
               </p>
             </div>
           </div>
@@ -302,5 +302,13 @@ export default function AdminLoginPage() {
 
       </motion.div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <AuthProvider>
+      <LoginFormInner />
+    </AuthProvider>
   );
 }

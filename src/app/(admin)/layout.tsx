@@ -67,7 +67,7 @@ const adminNavigation: NavGroup[] = [
         icon: Zap,
         roles: ["SUPER_ADMIN", "PLANT_MANAGER"],
       },
-            {
+      {
         title: "Downtime",
         href: "/admin/analytics/downtime",
         icon: Timer,
@@ -215,24 +215,15 @@ function AdminLayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const isLoginPage = pathname === "/admin/login";
-
   useEffect(() => {
-    if (!loading && !user && !isLoginPage) {
+    if (!loading && !user) {
       router.push("/admin/login");
     }
-    if (!loading && user && isLoginPage) {
-      router.push("/admin/dashboard");
-    }
-  }, [user, loading, isLoginPage, router]);
+  }, [user, loading, router]);
 
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
-
-  if (isLoginPage) {
-    return <>{children}</>;
-  }
 
   if (loading || !user) {
     return (
@@ -252,7 +243,6 @@ function AdminLayoutShell({ children }: { children: React.ReactNode }) {
   const NavigationContent = () => (
     <div className="flex h-full flex-col justify-between overflow-y-auto px-4 py-5 bg-[#063D2A] text-[#FDF8EE] selection:bg-[#28A745] selection:text-white">
       <div className="space-y-6">
-        {/* Brand Lockup */}
         <Link href="/admin/dashboard" className="flex items-center gap-3 px-2 group">
           <div className="relative h-10 w-10 shrink-0 rounded-xl bg-[#FDF8EE] p-1.5 flex items-center justify-center shadow-md">
             <Image
@@ -274,7 +264,6 @@ function AdminLayoutShell({ children }: { children: React.ReactNode }) {
           </div>
         </Link>
 
-        {/* Dynamic Groups */}
         <nav className="space-y-5">
           {filteredNav.map((group) => (
             <div key={group.groupLabel} className="space-y-1">
@@ -308,7 +297,6 @@ function AdminLayoutShell({ children }: { children: React.ReactNode }) {
         </nav>
       </div>
 
-      {/* Operator Session Card */}
       <div className="border-t border-white/15 pt-4 mt-6">
         <div className="flex items-center justify-between rounded-xl bg-white/[0.08] p-2.5 border border-white/10">
           <div className="flex flex-col overflow-hidden pr-2">
@@ -329,13 +317,10 @@ function AdminLayoutShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#FDF8EE] text-[#171F1B] font-sans selection:bg-[#006B3C] selection:text-white">
-      
-      {/* 1. DESKTOP BRAND GREEN SIDEBAR */}
       <aside className="hidden lg:flex w-64 flex-col shrink-0 shadow-lg z-20">
         <NavigationContent />
       </aside>
 
-      {/* 2. MOBILE DRAWER */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -367,10 +352,7 @@ function AdminLayoutShell({ children }: { children: React.ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* 3. LIGHT MINERAL CANVAS VIEWPORT */}
       <div className="flex flex-1 flex-col overflow-hidden bg-[#FDF8EE]">
-        
-        {/* LIGHT TOPBAR HEADER */}
         <header className="h-16 border-b border-[#DDE5DC] bg-[#FFFFFF]/90 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-3">
             <button
@@ -381,7 +363,6 @@ function AdminLayoutShell({ children }: { children: React.ReactNode }) {
               <Menu className="h-5 w-5" />
             </button>
 
-            {/* Fixed Single Facility Badge */}
             <div className="flex items-center gap-2 text-xs font-mono text-[#063D2A] bg-[#EEF5ED] border border-[#006B3C]/20 px-3 py-1.5 rounded-xl">
               <ShieldCheck className="h-3.5 w-3.5 text-[#006B3C]" />
               <span className="font-semibold">Haridwar Plant (SIDCUL)</span>
@@ -389,7 +370,6 @@ function AdminLayoutShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          {/* Status Indicator */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#EEF5ED] border border-[#DDE5DC]">
               <span className="relative flex h-2 w-2">
@@ -403,7 +383,6 @@ function AdminLayoutShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {/* MAIN CONTENT VIEWPORT */}
         <main className="flex-1 overflow-y-auto bg-[#FDF8EE] p-4 sm:p-6 lg:p-8">
           {children}
         </main>
