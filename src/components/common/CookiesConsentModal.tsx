@@ -2,19 +2,30 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, Cookie, X } from "lucide-react";
 
 export default function CookiesConsentModal() {
   const [isVisible, setIsVisible] = useState(false);
+  const pathname = usePathname();
+
+  // Immediately suppress on all admin routes
+  const isAdminRoute = pathname?.startsWith("/admin");
 
   useEffect(() => {
+    if (isAdminRoute) return;
+
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 600);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isAdminRoute]);
+
+  if (isAdminRoute) {
+    return null;
+  }
 
   const handleAction = () => {
     setIsVisible(false);
@@ -71,7 +82,7 @@ export default function CookiesConsentModal() {
             {/* Narrative Content */}
             <div className="space-y-2 mb-5">
               <p className="text-xs text-[#52605A] font-light leading-relaxed">
-                We utilize telemetry and essential functional cookies to optimize operational portals, maintain statutory session security, and analyze digital resource flows.
+                We utilize telemetry and essential functional cookies to optimize operational portals, maintain statutory session security, and analyze digital resource flows[cite: 3].
               </p>
               <div className="flex items-center gap-1.5 pt-0.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#006B3C]" />

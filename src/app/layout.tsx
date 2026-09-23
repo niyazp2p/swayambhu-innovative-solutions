@@ -1,11 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import ScrollProvider from "@/providers/ScrollProvider";
-import Footer from "@/components/layout/Footer";
-import CookiesConsentModal from "@/components/common/CookiesConsentModal";
-import AssistantWidget from "@/components/common/AssistantWidget";
+import PublicChrome from "@/components/layout/PublicChrome";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -182,13 +178,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans bg-swayam-ivory text-swayam-dark antialiased selection:bg-swayam-forest selection:text-white">
-        <ScrollProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer/>
-        </ScrollProvider>
-        <CookiesConsentModal/>
-        <AssistantWidget/>
+        <PublicChrome>{children}</PublicChrome>
       </body>
     </html>
   );
