@@ -29,6 +29,7 @@ import {
   ShieldCheck,
   LayoutDashboard,
   Timer,
+  BoxIcon,
 } from "lucide-react";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { UserRole } from "@/types/auth";
@@ -133,6 +134,17 @@ const adminNavigation: NavGroup[] = [
     ],
   },
   {
+    groupLabel: "Products & Materials",
+    items: [
+      {
+        title: "Products",
+        href: "/admin/products",
+        icon: BoxIcon,
+        roles: ["SUPER_ADMIN", "PLANT_MANAGER", "WEIGHBRIDGE_OPERATOR"],
+      },
+    ],
+  },
+  {
     groupLabel: "Sales & Outward",
     items: [
       {
@@ -161,6 +173,7 @@ const adminNavigation: NavGroup[] = [
       },
     ],
   },
+  
   {
     groupLabel: "Workforce & Payroll",
     items: [
