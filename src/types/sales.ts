@@ -30,12 +30,11 @@ export interface Buyer {
   created_at: string;
   updated_at?: string;
 }
-
 export interface BuyerCreatePayload {
   name: string;
   gstin?: string | null;
   pan_number?: string | null;
-  state_code?: string;
+  state_code: string;
   contact_person?: string | null;
   contact_phone: string;
   billing_address: string;

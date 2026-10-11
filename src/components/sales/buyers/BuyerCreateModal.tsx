@@ -25,17 +25,20 @@ export function BuyerCreateModal({ isOpen, onClose, onSubmit }: BuyerCreateModal
 
   if (!isOpen) return null;
 
-  // Derive PAN and State Code automatically from GSTIN if 15 chars provided
+  // Derive PAN and State Code automatically ONLY if a standard 15-char GSTIN is provided
   const handleGstinChange = (val: string) => {
     const formatted = val.toUpperCase().trim();
     setGstin(formatted);
+
+    // Only auto-extract if the first 2 characters are digits (standard Indian GST format)
     if (formatted.length >= 2) {
       const code = formatted.substring(0, 2);
       if (!isNaN(Number(code))) {
         setStateCode(code);
       }
     }
-    if (formatted.length >= 12) {
+    // Only auto-fill PAN if it looks like a standard GSTIN
+    if (formatted.length >= 12 && !isNaN(Number(formatted.substring(0, 2)))) {
       setPanNumber(formatted.substring(2, 12));
     }
   };
@@ -44,8 +47,11 @@ export function BuyerCreateModal({ isOpen, onClose, onSubmit }: BuyerCreateModal
     e.preventDefault();
     setError(null);
 
-    if (gstin && gstin.length !== 15) {
-      setError("Standard Indian GSTIN must be exactly 15 alphanumeric characters.");
+    const cleanGstin = gstin.trim().toUpperCase();
+
+    // Guard against backend string overflow (String(20))
+    if (cleanGstin.length > 20) {
+      setError("GSTIN / Identifier cannot exceed 20 characters.");
       return;
     }
 
@@ -53,7 +59,7 @@ export function BuyerCreateModal({ isOpen, onClose, onSubmit }: BuyerCreateModal
     try {
       await onSubmit({
         name: name.trim(),
-        gstin: gstin.trim() || undefined,
+        gstin: cleanGstin || undefined, // allows URP, custom code, or blank
         pan_number: panNumber.trim().toUpperCase() || undefined,
         state_code: stateCode.trim(),
         contact_person: contactPerson.trim() || undefined,
@@ -121,12 +127,12 @@ export function BuyerCreateModal({ isOpen, onClose, onSubmit }: BuyerCreateModal
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="text-[10px] uppercase font-bold text-[#52605A] block mb-1">
-                GSTIN (15 Digits)
+                GSTIN / URP (Optional)
               </label>
               <input
                 type="text"
-                placeholder="05AAAAA0000A1Z5"
-                maxLength={15}
+                placeholder="05AAAAA0000A1Z5 or URP"
+                maxLength={20}
                 value={gstin}
                 onChange={(e) => handleGstinChange(e.target.value)}
                 className="w-full px-3 py-2 rounded-xl border border-[#DDE5DC] bg-[#FAF8F5] text-xs uppercase focus:outline-[#006B3C]"
